@@ -71,7 +71,11 @@ router.get("/", async (req, res, next) => {
       convoJSON.latestMessageText = 
         convoJSON.messages[convoJSON.messages.length - 1].text;
       conversations[i] = convoJSON;
+
     }
+
+    // Sort conversations from newest to oldest
+    conversations.reverse();
 
     res.json(conversations);
   } catch (error) {
