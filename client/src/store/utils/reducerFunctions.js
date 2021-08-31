@@ -2,6 +2,18 @@ export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   if (sender !== null) {
+    // Create convo if one doesn't already exist
+    if (!state.find((convo) => convo.otherUser.id === sender.id)) {
+      const newConvo = {
+        id: message.conversationId,
+        messages: [message],
+        latestMessageText: message.text,
+        otherUser: sender,
+      };
+      return [...state, newConvo];
+    }
+
+    // Fill out fake convo if created in addSearchedUsersToStore
     return state.map((convo) => {
       if (convo.otherUser.id === sender.id) {
         const convoCopy = { ...convo };
