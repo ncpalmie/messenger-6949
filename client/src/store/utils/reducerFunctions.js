@@ -96,3 +96,22 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const setReadMessagesInStore = (state, payload) => {
+  const { messageIds, conversationId } = payload;
+
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      for (const messageId of messageIds) {
+        const message = convoCopy.messages.find(
+          (message) => message.id === messageId
+        );
+        message.isRead = true;
+      }
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
