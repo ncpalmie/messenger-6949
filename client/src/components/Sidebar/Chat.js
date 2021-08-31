@@ -30,9 +30,11 @@ const Chat = (props) => {
 
     const unreadMessageIds = [];
     for (const message of conversation.messages) {
-      if (!message.isRead) unreadMessageIds.push(message.id);
+      if (message.senderId === conversation.otherUser.id && !message.isRead)
+        unreadMessageIds.push(message.id);
     }
-    await props.readMessages(unreadMessageIds, conversation.id);
+    if (unreadMessageIds.length > 0)
+      await props.readMessages(unreadMessageIds, conversation.id);
   };
 
   return (

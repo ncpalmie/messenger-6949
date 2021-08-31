@@ -110,11 +110,20 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
+const sendReadStatus = (messageIds, conversationId) => {
+  socket.emit("read-message", {
+    messageIds,
+    conversationId,
+  });
+};
+
 export const readMessages =
   (messageIds, conversationId) => async (dispatch) => {
     try {
       await axios.patch("/api/messages/read", { messageIds });
       dispatch(setReadMessages(messageIds, conversationId));
+
+      sendReadStatus(messageIds, conversationId);
     } catch (error) {
       console.error(error);
     }
