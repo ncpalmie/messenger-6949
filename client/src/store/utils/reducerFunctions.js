@@ -102,11 +102,17 @@ export const setReadMessagesInStore = (state, payload) => {
 
   return state.map((convo) => {
     if (convo.id === conversationId) {
+      const messages = {};
       const convoCopy = { ...convo };
+
+      // make table of messages for fast lookup in case there are many messages
+      // to look through
+      for (const message of convoCopy.messages) {
+        messages[message.id] = message;
+      }
+
       for (const messageId of messageIds) {
-        const message = convoCopy.messages.find(
-          (message) => message.id === messageId
-        );
+        const message = messages[messageId];
         message.isRead = true;
       }
       return convoCopy;
