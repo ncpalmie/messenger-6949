@@ -118,7 +118,7 @@ export const setReadMessagesInStore = (state, payload) => {
           }
         }
       }
-      convoCopy.unreadMessageCount = 0;
+      if (!setSelfRead) convoCopy.unreadMessageCount = 0;
       return convoCopy;
     } else {
       return convo;

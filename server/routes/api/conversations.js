@@ -71,7 +71,7 @@ router.get("/", async (req, res, next) => {
       convoJSON.latestMessageText = 
         convoJSON.messages[convoJSON.messages.length - 1].text;
       convoJSON.unreadMessageCount = 
-        Message.count({ 
+        await Message.count({ 
           where: { 
             [Op.and]: [
               {

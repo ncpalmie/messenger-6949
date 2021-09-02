@@ -94,6 +94,7 @@ export const increaseUnreadCount = (conversationId) => {
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GET_CONVERSATIONS:
+      console.log(action.conversations);
       return action.conversations;
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);

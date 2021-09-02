@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, unreadMessageCount } = props;
   const { otherUser, messages } = conversation;
 
   const handleClick = async (conversation) => {
@@ -51,11 +51,14 @@ const Chat = (props) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
-      {props.unreadMessageCount > 0 && (
+      <ChatContent
+        conversation={conversation}
+        hasUnreadMessages={unreadMessageCount > 0}
+      />
+      {unreadMessageCount > 0 && (
         <Box className={classes.notificationBox}>
           <Typography className={classes.notificationText}>
-            {props.unreadMessageCount}
+            {unreadMessageCount}
           </Typography>
         </Box>
       )}
