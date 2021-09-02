@@ -5,6 +5,7 @@ import {
   removeOfflineUser,
   addOnlineUser,
   setReadMessages,
+  increaseUnreadCount,
 } from "./store/conversations";
 import { readMessages } from "./store/utils/thunkCreators";
 
@@ -31,14 +32,16 @@ socket.on("connect", () => {
       (convo) => convo.id === data.message.conversationId
     ).otherUser;
     if (state.activeConversation === otherUser.username) {
-      store.dispatch(
-        readMessages([data.message.id], data.message.conversationId)
-      );
+      store.dispatch(readMessages(otherUser.id, data.message.conversationId));
+    } else {
+      store.dispatch(increaseUnreadCount(data.message.conversationId));
     }
   });
 
   socket.on("read-message", (data) => {
-    store.dispatch(setReadMessages(data.messageIds, data.conversationId));
+    store.dispatch(
+      setReadMessages(data.otherUserId, data.conversationId, true)
+    );
   });
 });
 

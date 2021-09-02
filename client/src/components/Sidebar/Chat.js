@@ -34,18 +34,13 @@ const useStyles = makeStyles((theme) => ({
 const Chat = (props) => {
   const classes = useStyles();
   const { conversation } = props;
-  const { otherUser } = conversation;
+  const { otherUser, messages } = conversation;
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
 
-    const unreadMessageIds = [];
-    for (const message of conversation.messages) {
-      if (message.senderId === conversation.otherUser.id && !message.isRead)
-        unreadMessageIds.push(message.id);
-    }
-    if (unreadMessageIds.length > 0)
-      await props.readMessages(unreadMessageIds, conversation.id);
+    if (messages.some((msg) => !msg.isRead && msg.senderId === otherUser.id))
+      await props.readMessages(otherUser.id, conversation.id);
   };
 
   return (
@@ -73,8 +68,8 @@ const mapDispatchToProps = (dispatch) => {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
     },
-    readMessages: (messageIds, conversationId) => {
-      dispatch(readMessages(messageIds, conversationId));
+    readMessages: (otherUserId, conversationId) => {
+      dispatch(readMessages(otherUserId, conversationId));
     },
   };
 };

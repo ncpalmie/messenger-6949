@@ -34,17 +34,10 @@ const Sidebar = (props) => {
           conversation.otherUser.username.includes(searchTerm)
         )
         .map((conversation) => {
-          const unreadMessageCount = conversation.messages.reduce(
-            (a, msg) =>
-              !msg.isRead && msg.senderId === conversation.otherUser.id
-                ? a + 1
-                : a,
-            0
-          );
           return (
             <Chat
               conversation={conversation}
-              unreadMessageCount={unreadMessageCount}
+              unreadMessageCount={conversation.unreadMessageCount}
               key={conversation.otherUser.username}
             />
           );

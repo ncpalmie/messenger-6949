@@ -98,23 +98,39 @@ export const addNewConvoToStore = (state, recipientId, message) => {
 };
 
 export const setReadMessagesInStore = (state, payload) => {
-  const { messageIds, conversationId } = payload;
+  const { otherUserId, conversationId, setSelfRead } = payload;
 
   return state.map((convo) => {
     if (convo.id === conversationId) {
-      const messages = {};
       const convoCopy = { ...convo };
 
-      // make table of messages for fast lookup in case there are many messages
-      // to look through
-      for (const message of convoCopy.messages) {
-        messages[message.id] = message;
+      for (let i = convoCopy.messages.length - 1; i >= 0; i--) {
+        const message = convoCopy.messages[i];
+        if (
+          (!setSelfRead && message.senderId === otherUserId) ||
+          (setSelfRead && message.senderId !== otherUserId)
+        ) {
+          if (convoCopy.messages[i].isRead) {
+            // All messages before this message have already been read as well
+            break;
+          } else {
+            message.isRead = true;
+          }
+        }
       }
+      convoCopy.unreadMessageCount = 0;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
 
-      for (const messageId of messageIds) {
-        const message = messages[messageId];
-        message.isRead = true;
-      }
+export const increaseUnreadCountInStore = (state, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      convoCopy.unreadMessageCount++;
       return convoCopy;
     } else {
       return convo;
