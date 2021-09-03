@@ -2,17 +2,14 @@ export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   if (sender !== null) {
-    return state.map((convo) => {
-      if (convo.otherUser.id === sender.id) {
-        const convoCopy = { ...convo };
-        convoCopy.id = message.conversationId;
-        convoCopy.messages = [message];
-        convoCopy.latestMessageText = message.text;
-        return convoCopy;
-      } else {
-        return convo;
-      }
-    });
+    const newConvo = {
+      id: message.conversationId,
+      messages: [message],
+      latestMessageText: message.text,
+      otherUser: sender,
+      unreadMessageCount: message.senderId === sender.id ? 1 : 0,
+    };
+    return [...state, newConvo];
   }
 
   return state.map((convo) => {
@@ -20,6 +17,8 @@ export const addMessageToStore = (state, payload) => {
       const convoCopy = { ...convo };
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
+      if (message.senderId === convoCopy.otherUser.id)
+        convoCopy.unreadMessageCount++;
       return convoCopy;
     } else {
       return convo;
@@ -78,6 +77,27 @@ export const addNewConvoToStore = (state, recipientId, message) => {
       convoCopy.id = message.conversationId;
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+
+export const setReadMessagesInStore = (state, payload) => {
+  const { messages, lastReadMessageId, conversationId, setSelfRead } = payload;
+
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+
+      convoCopy.messages = messages;
+
+      if (setSelfRead) {
+        convoCopy.lastReadMessageId = lastReadMessageId;
+      } else {
+        convoCopy.unreadMessageCount = 0;
+      }
       return convoCopy;
     } else {
       return convo;

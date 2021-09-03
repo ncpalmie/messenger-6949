@@ -1,8 +1,9 @@
 import React from "react";
-import { Box } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
+import { readMessages } from "../../store/utils/thunkCreators";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,18 +15,32 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     "&:hover": {
-      cursor: "grab"
-    }
-  }
+      cursor: "grab",
+    },
+  },
+  notificationBox: {
+    background: "#3A8DFF",
+    borderRadius: "30px",
+    marginRight: 24,
+  },
+  notificationText: {
+    fontSize: 12,
+    color: "#FFFFFF",
+    padding: "4px 9px 3px 9px",
+    fontWeight: "bold",
+  },
 }));
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, unreadMessageCount } = props;
   const { otherUser } = conversation;
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
+
+    if (unreadMessageCount > 0)
+      await props.readMessages(otherUser.id, conversation.id);
   };
 
   return (
@@ -36,7 +51,17 @@ const Chat = (props) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
+      <ChatContent
+        conversation={conversation}
+        hasUnreadMessages={unreadMessageCount > 0}
+      />
+      {unreadMessageCount > 0 && (
+        <Box className={classes.notificationBox}>
+          <Typography className={classes.notificationText}>
+            {unreadMessageCount}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };
@@ -45,7 +70,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
-    }
+    },
+    readMessages: (otherUserId, conversationId) => {
+      dispatch(readMessages(otherUserId, conversationId));
+    },
   };
 };
 

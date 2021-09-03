@@ -37,6 +37,7 @@ const Sidebar = (props) => {
           return (
             <Chat
               conversation={conversation}
+              unreadMessageCount={conversation.unreadMessageCount}
               key={conversation.otherUser.username}
             />
           );
