@@ -50,12 +50,43 @@ router.patch("/read", async (req, res, next) => {
       return res.sendStatus(404);
     }
     const { otherUserId, conversationId } = req.body;
-    Message.update({isRead: true}, {
+    const conversation = Conversation.findOne( 
+      {where: {
+        [Op.or]: {
+          user1Id: otherUserId,
+          user2Id: otherUserId,
+        },
+      }
+    });
+
+    if (conversation === null) return res.sendStatus(403);
+
+    await Message.update({isRead: true}, {
       where: {
         [Op.and]: [{senderId: otherUserId}, {conversationId: conversationId}]
       }
     });
-    res.sendStatus(204);
+
+    const newMessages = 
+      await Message.findAll({ 
+        where: {
+          conversationId: conversationId
+        }, 
+        order: [['createdAt', 'ASC']]});
+
+    const newLastReadMessageId = (await Message.findOne({
+      where: {
+        [Op.and]: {
+          senderId: otherUserId,
+          isRead: true
+        }
+      },
+      order: [['createdAt', 'DESC']],
+      attributes: ['id'],
+      raw: true
+    })).id;
+
+    res.json({messages: newMessages, lastReadMessageId: newLastReadMessageId});
   } catch (error) {
     next(error);
   }

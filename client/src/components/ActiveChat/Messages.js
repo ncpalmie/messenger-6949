@@ -4,18 +4,7 @@ import { SenderBubble, OtherUserBubble } from "../ActiveChat";
 import moment from "moment";
 
 const Messages = (props) => {
-  const getLastReadMessageId = (messages, otherUser) => {
-    // Looks in reverse order as most recent read message as unread messages
-    // are the most recently sent
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].senderId !== otherUser.id && messages[i].isRead)
-        return messages[i].id;
-    }
-    return null;
-  };
-
-  const { messages, otherUser, userId } = props;
-  const lastReadMessageId = getLastReadMessageId(messages, otherUser);
+  const { messages, otherUser, lastReadMessageId, userId } = props;
 
   return (
     <Box>

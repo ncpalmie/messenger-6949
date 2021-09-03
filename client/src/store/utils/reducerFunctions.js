@@ -2,29 +2,14 @@ export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   if (sender !== null) {
-    // Create convo if one doesn't already exist
-    if (!state.find((convo) => convo.otherUser.id === sender.id)) {
-      const newConvo = {
-        id: message.conversationId,
-        messages: [message],
-        latestMessageText: message.text,
-        otherUser: sender,
-      };
-      return [...state, newConvo];
-    }
-
-    // Fill out fake convo if created in addSearchedUsersToStore
-    return state.map((convo) => {
-      if (convo.otherUser.id === sender.id) {
-        const convoCopy = { ...convo };
-        convoCopy.id = message.conversationId;
-        convoCopy.messages = [message];
-        convoCopy.latestMessageText = message.text;
-        return convoCopy;
-      } else {
-        return convo;
-      }
-    });
+    const newConvo = {
+      id: message.conversationId,
+      messages: [message],
+      latestMessageText: message.text,
+      otherUser: sender,
+      unreadMessageCount: message.senderId === sender.id ? 1 : 0,
+    };
+    return [...state, newConvo];
   }
 
   return state.map((convo) => {
@@ -32,6 +17,8 @@ export const addMessageToStore = (state, payload) => {
       const convoCopy = { ...convo };
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
+      if (message.senderId === convoCopy.otherUser.id)
+        convoCopy.unreadMessageCount++;
       return convoCopy;
     } else {
       return convo;
@@ -98,39 +85,19 @@ export const addNewConvoToStore = (state, recipientId, message) => {
 };
 
 export const setReadMessagesInStore = (state, payload) => {
-  const { otherUserId, conversationId, setSelfRead } = payload;
+  const { messages, lastReadMessageId, conversationId, setSelfRead } = payload;
 
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
 
-      for (let i = convoCopy.messages.length - 1; i >= 0; i--) {
-        const message = convoCopy.messages[i];
-        if (
-          (!setSelfRead && message.senderId === otherUserId) ||
-          (setSelfRead && message.senderId !== otherUserId)
-        ) {
-          if (convoCopy.messages[i].isRead) {
-            // All messages before this message have already been read as well
-            break;
-          } else {
-            message.isRead = true;
-          }
-        }
+      convoCopy.messages = messages;
+
+      if (setSelfRead) {
+        convoCopy.lastReadMessageId = lastReadMessageId;
+      } else {
+        convoCopy.unreadMessageCount = 0;
       }
-      if (!setSelfRead) convoCopy.unreadMessageCount = 0;
-      return convoCopy;
-    } else {
-      return convo;
-    }
-  });
-};
-
-export const increaseUnreadCountInStore = (state, conversationId) => {
-  return state.map((convo) => {
-    if (convo.id === conversationId) {
-      const convoCopy = { ...convo };
-      convoCopy.unreadMessageCount++;
       return convoCopy;
     } else {
       return convo;

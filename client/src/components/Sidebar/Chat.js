@@ -34,12 +34,12 @@ const useStyles = makeStyles((theme) => ({
 const Chat = (props) => {
   const classes = useStyles();
   const { conversation, unreadMessageCount } = props;
-  const { otherUser, messages } = conversation;
+  const { otherUser } = conversation;
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
 
-    if (messages.some((msg) => !msg.isRead && msg.senderId === otherUser.id))
+    if (unreadMessageCount > 0)
       await props.readMessages(otherUser.id, conversation.id);
   };
 

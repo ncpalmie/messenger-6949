@@ -32,8 +32,6 @@ const ChatContent = (props) => {
   const { conversation, hasUnreadMessages } = props;
   const { latestMessageText, otherUser } = conversation;
 
-  console.log(hasUnreadMessages);
-
   return (
     <Box className={classes.root}>
       <Box>

@@ -73,7 +73,6 @@ export const logout = (id) => async (dispatch) => {
 export const fetchConversations = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/conversations");
-    console.log(data);
     dispatch(gotConversations(data));
   } catch (error) {
     console.error(error);
@@ -111,9 +110,10 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
-const sendReadStatus = (otherUserId, conversationId) => {
+const sendReadStatus = (messages, lastReadMessageId, conversationId) => {
   socket.emit("read-message", {
-    otherUserId,
+    messages,
+    lastReadMessageId,
     conversationId,
   });
 };
@@ -121,10 +121,16 @@ const sendReadStatus = (otherUserId, conversationId) => {
 export const readMessages =
   (otherUserId, conversationId) => async (dispatch) => {
     try {
-      await axios.patch("/api/messages/read", { otherUserId, conversationId });
-      dispatch(setReadMessages(otherUserId, conversationId));
+      const { data } = await axios.patch("/api/messages/read", {
+        otherUserId,
+        conversationId,
+      });
 
-      sendReadStatus(otherUserId, conversationId);
+      dispatch(
+        setReadMessages(data.messages, data.lastReadMessageId, conversationId)
+      );
+
+      sendReadStatus(data.messages, data.lastReadMessageId, conversationId);
     } catch (error) {
       console.error(error);
     }
