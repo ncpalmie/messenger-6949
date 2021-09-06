@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   root: {
     backgroundImage: `linear-gradient(to bottom, rgba(58, 141, 255, 0.85), rgba(134, 185, 255, 0.85)), url(${bgImage})`,
     backgroundSize: "cover",
-    flex: "1",
+    flex: "1.5",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -24,9 +24,9 @@ const useStyles = makeStyles(() => ({
     fontSize: 35,
     textAlign: "center",
     color: "#FFFFFF",
-    marginTop: 25,
-    paddingLeft: 100,
-    paddingRight: 100,
+    marginTop: 40,
+    paddingLeft: 150,
+    paddingRight: 150,
   },
 }));
 

@@ -4,7 +4,7 @@ import { Grid, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Banner from "./Banner";
 import Signup from "../../Signup";
-import Login from "../../Login";
+import Login from "./Login";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,7 +31,6 @@ const Landing = () => {
           <Route path={`${path}/login`} component={Login} />
           <Route path={`${path}/register`} component={Signup} />
         </Switch>
-        <Box style={{ flex: "2" }}></Box>
       </Grid>
     </>
   );
