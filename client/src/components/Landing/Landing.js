@@ -6,13 +6,13 @@ import {
   useRouteMatch,
   Redirect,
 } from "react-router-dom";
-import { Grid, Box } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Banner from "./Banner";
 import Signup from "./Signup";
 import Login from "./Login";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     height: "100vh",

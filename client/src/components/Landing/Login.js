@@ -13,46 +13,62 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { login } from "../../store/utils/thunkCreators";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: "2",
     height: "fit-content",
   },
   header: {
     display: "flex",
-    height: "fit-content",
     width: "100%",
     justifyContent: "flex-end",
     alignItems: "center",
-    padding: 50,
+    margin: 50,
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
+      margin: 10,
+    },
   },
   form: {
     display: "flex",
-    height: "fit-content",
     width: "100%",
     flexDirection: "column",
     marginLeft: 160,
     marginTop: 80,
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
+      alignItems: "center",
+      margin: 0,
+    },
   },
   registerButton: {
-    width: "fit-content",
-    whiteSpace: "nowrap",
     padding: "20px 50px 20px 50px",
     color: "#3A8DFF",
     boxShadow: "0px 0px 12px 1px #DCDCDC",
     fontSize: 20,
+    [theme.breakpoints.down("sm")]: {
+      padding: "10px 25px 10px 25px",
+      fontSize: 15,
+    },
   },
   registerText: {
     marginRight: 35,
     fontSize: 20,
     color: "#C8C8C8",
+    textAlign: "right",
+    [theme.breakpoints.down("sm")]: {
+      marginRight: 20,
+      fontSize: 16,
+    },
   },
   inputLabel: {
     marginTop: 20,
-    marginRight: 35,
     marginBottom: 20,
     fontSize: 20,
     color: "#C8C8C8",
+    [theme.breakpoints.down("sm")]: {
+      margin: 0,
+    },
   },
   welcomeText: {
     fontSize: 35,
@@ -61,6 +77,9 @@ const useStyles = makeStyles(() => ({
   },
   inputFieldContainer: {
     width: "70%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
   forgotText: {
     color: "#3A8DFF",
@@ -71,6 +90,10 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     width: "70%",
     marginTop: 80,
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 10,
+      marginLeft: 40,
+    },
   },
   loginButton: {
     backgroundColor: "#3A8DFF",
@@ -78,7 +101,6 @@ const useStyles = makeStyles(() => ({
     fontFamily: "Monserrat, sans-serif",
     fontSize: 20,
     padding: "20px 80px 20px 80px",
-    alignSelf: "center",
   },
 }));
 
