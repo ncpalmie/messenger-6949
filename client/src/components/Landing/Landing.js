@@ -33,7 +33,8 @@ const Landing = () => {
   return (
     <>
       <Grid container className={classes.root}>
-        <Banner></Banner>
+        <Banner/>
+
         <Switch>
           <Route path={`${path}register`} component={Signup} />
           <Route path={`${path}login`} component={Login} />
